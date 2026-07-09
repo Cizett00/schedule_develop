@@ -1,5 +1,6 @@
 package org.example.ch3_develop.user.service;
 
+import jakarta.validation.Valid;
 import org.example.ch3_develop.schedule.dto.GetScheduleResponse;
 import org.example.ch3_develop.user.dto.*;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,11 +18,12 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public CreateUserResponse createUser(CreateUserRequest request){
+    public CreateUserResponse signUp(CreateUserRequest request){
 
         User user = new User(
                 request.getName(),
-                request.getEmail()
+                request.getEmail(),
+                request.getPassword()
         );
 
         User savedUser = userRepository.save(user);
@@ -32,6 +34,20 @@ public class UserService {
                 savedUser.getEmail(),
                 savedUser.getCreatedAt(),
                 savedUser.getModifiedAt()
+        );
+    }
+    @Transactional(readOnly = true)
+    public SessionUser login(@Valid LoginRequest request){
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
+                () -> new IllegalArgumentException("유효하지 않은 로그인 요청입니다")
+        );
+        if(!user.getPassword().equals(request.getPassword())){
+            throw new IllegalArgumentException("이메일 또는 비밀번호가 일치하지 않습니다");
+        }
+        return new SessionUser(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
         );
     }
 

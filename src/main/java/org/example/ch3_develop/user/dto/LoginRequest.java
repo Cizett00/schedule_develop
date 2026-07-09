@@ -1,11 +1,13 @@
 package org.example.ch3_develop.user.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class CreateUserRequest {
+public class LoginRequest {
 
-    private String name;
+    @NotBlank
     private String email;
+    @NotBlank
     private String password;
 }

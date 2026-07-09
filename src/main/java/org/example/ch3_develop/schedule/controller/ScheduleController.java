@@ -1,5 +1,6 @@
 package org.example.ch3_develop.schedule.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
@@ -20,7 +21,12 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    public ResponseEntity<CreateScheduleResponse> CreateSchedule(@RequestBody CreateScheduleRequest createScheduleRequest){
+    public ResponseEntity<CreateScheduleResponse> CreateSchedule(
+            @RequestBody CreateScheduleRequest createScheduleRequest,
+            HttpSession session){
+        if(session.getAttribute("LoginUser") == null){
+            throw new IllegalArgumentException("로그인이 필요합니다");
+        }
         CreateScheduleResponse result = scheduleService.createSchedule(createScheduleRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
@@ -45,7 +51,11 @@ public class ScheduleController {
     @PutMapping("/{id}")
     public ResponseEntity<UpdateScheduleResponse> UpdateSchedule(
             @PathVariable Long id,
-            @RequestBody UpdateScheduleRequest request){
+            @RequestBody UpdateScheduleRequest request,
+            HttpSession session){
+        if(session.getAttribute("LoginUser") == null){
+            throw new IllegalArgumentException("로그인이 필요합니다");
+        }
         UpdateScheduleResponse result = scheduleService.updateSchedule(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
@@ -53,7 +63,11 @@ public class ScheduleController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> DeleteSchedule(
             @PathVariable Long id,
-            @RequestBody DeleteScheduleRequest request){
+            @RequestBody DeleteScheduleRequest request,
+            HttpSession session){
+        if(session.getAttribute("LoginUser") == null){
+            throw new IllegalArgumentException("로그인이 필요합니다");
+        }
         scheduleService.deleteSchedule(id, request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
