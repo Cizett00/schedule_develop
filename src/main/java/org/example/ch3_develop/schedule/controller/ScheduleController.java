@@ -15,10 +15,11 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/schedules")
 public class ScheduleController {
     private final ScheduleService scheduleService;
 
-    @PostMapping("/schedules")
+    @PostMapping
     public ResponseEntity<CreateScheduleResponse> CreateSchedule(@RequestBody CreateScheduleRequest createScheduleRequest){
         CreateScheduleResponse result = scheduleService.createSchedule(createScheduleRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
@@ -29,19 +30,19 @@ public class ScheduleController {
 //        return ResponseEntity.status(HttpStatus.OK).body(result);
 //    }
 
-    @GetMapping("/schedules")
+    @GetMapping
     public ResponseEntity<List<GetScheduleResponse>> GetAllSchedule(){
         List<GetScheduleResponse> result = scheduleService.getAllSchedule();
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @GetMapping("/schedules/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<GetScheduleResponse> GetSchedule(@PathVariable Long id){
         GetScheduleResponse result = scheduleService.getSchedule(id);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @PutMapping("/schedules/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UpdateScheduleResponse> UpdateSchedule(
             @PathVariable Long id,
             @RequestBody UpdateScheduleRequest request){
@@ -49,7 +50,7 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @DeleteMapping("/schedules/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> DeleteSchedule(
             @PathVariable Long id,
             @RequestBody DeleteScheduleRequest request){
